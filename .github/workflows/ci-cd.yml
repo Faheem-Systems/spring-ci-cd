@@ -34,7 +34,11 @@ jobs:
         with:
           name: spring-boot-app-jar
           path: target/*.jar
-
+# Step 3: Set environment variables with secrets (for API key and DB password)
+      - name: Set up environment variables with secrets
+        run: |
+          echo "MY_SECRET_KEY=${{ secrets.MY_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "MY_DB_PASSWORD=${{ secrets.MY_DB_PASSWORD }}" >> $GITHUB_ENV
   deploy:
     runs-on: ubuntu-latest
     needs: build
