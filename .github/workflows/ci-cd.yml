@@ -1,0 +1,53 @@
+name: Spring Boot CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up JDK 11 using AdoptOpenJDK distribution
+      - name: Set up JDK 11 (AdoptOpenJDK)
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adoptopenjdk'  # Use adoptopenjdk instead of adoptium
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests=true
+
+      - name: Run Tests
+        run: mvn test
+
+      - name: Save JAR as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: spring-boot-app-jar
+          path: target/*.jar
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: spring-boot-app-jar
+          path: ./artifact
+
+      - name: Deploy Application (Mock Deployment)
+        run: echo "Deploying Spring Boot Application..."
