@@ -30,7 +30,7 @@ jobs:
         run: mvn test
 
       - name: Save JAR as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: spring-boot-app-jar
           path: target/*.jar
